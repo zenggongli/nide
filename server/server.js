@@ -3,9 +3,9 @@ var sockeio = require('socket.io')
 var project = require('./project.js')
 var child_process = require('child_process')
 
-var server = express.createServer();
-var staticServer = express.createServer();
-
+var server = express();
+var staticServer = express();
+//启动监听服务
 exports.listen = function(port, host, username, password, downgrade, launchBrowser) {
     var authenticate
 
@@ -49,13 +49,8 @@ exports.listen = function(port, host, username, password, downgrade, launchBrows
         staticServer.use(express.static(process.cwd()));
     });
 
-    var io = sockeio.listen(server, { 'log level': 1 })
 
-    io.configure(function () {
-        io.set('transports', ['flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
-    });
-
-    server.listen(port, host, function() {
+    var httpserver = server.listen(port, host, function() {
         staticServer.listen(port+1, host, function() {
             // if run as root, downgrade to the owner of this file
             if (process.getuid() === 0) {
@@ -68,7 +63,12 @@ exports.listen = function(port, host, username, password, downgrade, launchBrows
             }
         });
     });
-    
+    var io = sockeio.listen( httpserver, { 'log level': 1 })
+
+    io.configure(function () {
+        io.set('transports', ['flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
+    });
+
     var serverErrorHandler = function(err) {
         if (err.code == 'EADDRINUSE') {
             console.error('Error: Address already in use. Try running nide under a different port.')
@@ -96,7 +96,7 @@ exports.listen = function(port, host, username, password, downgrade, launchBrows
     }
 
     console.log("Nide running at " + nideUrl);
-    
+    //打开浏览器
     if (launchBrowser) {
         var browser;
         switch (process.platform) {
@@ -107,6 +107,7 @@ exports.listen = function(port, host, username, password, downgrade, launchBrows
         // if this fails, it'll just exit with a non-zero code.
         child_process.spawn(browser, [nideUrl]);
     }
+    //事件处理
 
     io.sockets.on('connection', function(socket) {
         project.list()

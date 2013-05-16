@@ -49,13 +49,13 @@
     var createGalaxyBackground = function(name) {
         var galaxyBackground = document.createElement('div')
         galaxyBackground.innerHTML = 
-            '<h1 class="now">Now (' + name + ')</h1>' +
-            '<h1 class="then">Then</h1>' +
-            '<button class="done">Done</button>' +
-            '<button class="revert">Revert</button>' +
-            '<button class="backward" title="Go backward in time"><img src="img/backward.png" alt="Backward"></button>' +
-            '<button class="forward" title="Go forward in time"><img src="img/forward.png" alt="Forward"></button>' +
-            '<div class="no-previous">There are no previous versions for this file.</div>';
+            '<h1 class="now">目前 (' + name + ')</h1>' +
+            '<h1 class="then">历史</h1>' +
+            '<button class="done">确定</button>' +
+            '<button class="revert">回滚</button>' +
+            '<button class="backward" title="后方"><img src="img/backward.png" alt="Backward"></button>' +
+            '<button class="forward" title="前方"><img src="img/forward.png" alt="Forward"></button>' +
+            '<div class="no-previous">无内容.</div>';
 
         galaxyBackground.now = $(".now", galaxyBackground)[0];
         galaxyBackground.then = $(".then", galaxyBackground)[0];
@@ -74,16 +74,16 @@
         actionsBar.innerHTML = '<b>' + cwd + path + '</b> '
         
         actionsBar.renameButton = document.createElement('button')
-        actionsBar.renameButton.innerHTML = 'Rename'
+        actionsBar.renameButton.innerHTML = '改文件名'
         actionsBar.appendChild(actionsBar.renameButton)
         
         actionsBar.versionsButton = document.createElement('button')
-        actionsBar.versionsButton.innerHTML = 'Versions'
+        actionsBar.versionsButton.innerHTML = '版本比较'
         actionsBar.appendChild(actionsBar.versionsButton)
         
         if (path.match(/\.(x?html?|svg)$/)) {
             actionsBar.viewButton = document.createElement('button')
-            actionsBar.viewButton.innerHTML = 'View'
+            actionsBar.viewButton.innerHTML = 'WEB浏览'
             actionsBar.appendChild(actionsBar.viewButton)
         }
         
@@ -100,7 +100,7 @@
         var versions;
         
         $(actionsBar.renameButton).click(function(e) {
-            var newName = prompt('New filename:', entry.name)
+            var newName = prompt('新文件名:', entry.name)
             if (newName) {
                 connection.renameFile(entry.path, entry.path.replace(/\/[^\/]+$/, '/' + newName))
             }
@@ -245,7 +245,7 @@
                 if (hidden) {
                     $(versionEditor).animate({
                         scale: (1 - (currentVersion - i) * 0.05),
-                        translateY: -(currentVersion - i)*20,
+                        translateY: -(currentVersion - i)*20
                     }, { queue: false })
                 } else {
                     loadVersionNumbered(i)

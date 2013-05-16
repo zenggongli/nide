@@ -124,7 +124,7 @@ var UserInterfaceController = function() {
     })
 
     $('#add-file').click(function(e) {
-        var filename = prompt('Type in a filename for the new file:', 'untitled.js')
+        var filename = prompt('新文件名:', 'file.js')
         if (filename) {
             var path;
             if (!currentFile) {
@@ -148,7 +148,7 @@ var UserInterfaceController = function() {
     })
 
     $('#add-folder').click(function(e) {
-        var filename = prompt('Type in a filename for the new folder', 'folder')
+        var filename = prompt('新目录名', 'folder')
         if (filename) {
             var path;
             if (!currentFile) {
@@ -174,9 +174,9 @@ var UserInterfaceController = function() {
         if (currentFile) {
             var confirmed
             if (currentFile.type == 'file') {
-                confirmed = confirm('Are you sure?')
+                confirmed = confirm('确定嘛?')
             } else if (currentFile.type == 'directory') {
-                confirmed = confirm('This will remove the directory and all its contents. Are you sure?')
+                confirmed = confirm('将删除这个目录和里面所有文件. 确定嘛?')
             } else {
                 confirmed = false
             }
@@ -195,9 +195,9 @@ var UserInterfaceController = function() {
         // Create Overlay
         $.get('dialog.html', function(response) {
             $('body').append(response);
-            $('.dialog-title').html('Preferences');
+            $('.dialog-title').html('偏好');
             $('.dialog-content').html(
-                '<label for="theme-selection">Editor Theme : <select id="theme-selection"></select></label>'
+                '<label for="theme-selection">方案 : <select id="theme-selection"></select></label>'
             );
 
             // Center Dialog

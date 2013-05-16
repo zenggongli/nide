@@ -19,7 +19,7 @@ var loadVersionHistory = function() {
 
     }
 }
-
+//周期检测变更
 setInterval(function() {
     for (var file in fileStates) {
         if (fileStates[file] == 'modified') {
@@ -56,7 +56,7 @@ exports.start = function() {
 }
 
 exports.shouldDisplayWelcome = false
-
+//初始,创建配置文件
 exports.init = function() {
     try {
         fs.mkdirSync('.nide', '755')
@@ -140,6 +140,7 @@ var addToListCache = function(path) {
         }
     }
 }
+//目录缓存
 exports.list = function(noCache) {
     var ee = new EventEmitter();
     if (noCache || !listCache) {
@@ -179,6 +180,7 @@ exports.list = function(noCache) {
     return ee
 }
 
+//创建文件
 exports.add = function(path) {
     var ee = new EventEmitter()
     if (path.charAt(0) != '/' || path.indexOf('..') != -1) {
@@ -202,7 +204,7 @@ exports.add = function(path) {
     }
     return ee;
 }
-
+//创建目录
 exports.addFolder = function(path) {
     var ee = new EventEmitter()
     if (path.charAt(0) != '/' || path.indexOf('..') != -1) {
@@ -226,7 +228,7 @@ exports.addFolder = function(path) {
     }
     return ee;
 }
-
+//删文件
 exports.remove = function(path) {
     var ee = new EventEmitter()
     if (path.charAt(0) != '/' || path.indexOf('..') != -1 || path == '/') {
@@ -247,7 +249,7 @@ exports.remove = function(path) {
     return ee;
 }
 
-
+//改名
 exports.rename = function(oldpath, newpath) {
     var ee = new EventEmitter()
     if (oldpath.charAt(0) != '/' || oldpath.indexOf('..') != -1 || oldpath == '/' ||
@@ -268,7 +270,7 @@ exports.rename = function(oldpath, newpath) {
     }
     return ee;
 }
-
+//保存
 exports.save = function(path, contents) {
     var ee = new EventEmitter()
     if (path.charAt(0) != '/' || path.indexOf('..') != -1) {
@@ -286,7 +288,7 @@ exports.save = function(path, contents) {
     }
     return ee;
 }
-
+//读取文件
 exports.load = function(path) {
     var ee = new EventEmitter()
     if (path.charAt(0) != '/' || path.indexOf('..') != -1) {
@@ -338,7 +340,7 @@ exports.version = function(versionUuid) {
     }
     return ee
 }
-
+//浏览包
 exports.packages = function() {
     var ee = new EventEmitter()
     exec('npm ls', function(err, stdout, stderr) {
@@ -358,7 +360,7 @@ exports.packages = function() {
     })
     return ee;
 }
-
+//安装包
 exports.install = function(package, save) {
     var ee = new EventEmitter()
     exec('npm install' + (save ? ' --save' : '')+ ' -- ' + package, function(err, stdout, stderr) {
@@ -371,7 +373,7 @@ exports.install = function(package, save) {
     })
     return ee;
 }
-
+//卸载包
 exports.uninstall = function(package, save) {
     var ee = new EventEmitter()
     exec('npm uninstall' + (save ? ' --save' : '') + ' -- ' + package, function(err, stdout, stderr) {
