@@ -22,6 +22,7 @@ var ServerConnection = function() {
         ui.updateFileListing(data.children)
     });
 
+
     this.renameFile = function(oldpath, newpath) {
         socket.emit('rename', { oldpath: oldpath, newpath: newpath })
     }
@@ -160,4 +161,23 @@ var ServerConnection = function() {
     this.list = function() {
         socket.emit('list')
     }
+
+
+    var runjsCallbacks = {}
+    this.runjs = function(path, callback) {
+        socket.emit('runjs', path)
+        if (!runjsCallbacks[path]) {
+            runjsCallbacks[path] = [callback]
+        } else {
+            runjsCallbacks[path].push(callback)
+        }
+    }
+
+    socket.on('runok', function(data) {
+        var callbacks = runjsCallbacks[data.path] || []
+        for (var i = 0; i < callbacks.length; i++) {
+            callbacks[i](data.error, data.url)
+        }
+        delete runjsCallbacks[data.path]
+    })
 }

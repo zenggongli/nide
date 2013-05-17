@@ -252,6 +252,13 @@ exports.listen = function(port, host, username, password, downgrade, launchBrows
                 socket.emit('list', list)
             })
         })
+
+        socket.on('runjs', function(data) {
+            project.runjs(data)
+                .on('success', function(list) {
+                    socket.emit('runok', list)
+                })
+        })
     })
 
 }

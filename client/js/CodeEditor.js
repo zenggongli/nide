@@ -74,19 +74,23 @@
         actionsBar.innerHTML = '<b>' + cwd + path + '</b> '
         
         actionsBar.renameButton = document.createElement('button')
-        actionsBar.renameButton.innerHTML = '改文件名'
+        actionsBar.renameButton.innerHTML = '改名'
         actionsBar.appendChild(actionsBar.renameButton)
         
         actionsBar.versionsButton = document.createElement('button')
-        actionsBar.versionsButton.innerHTML = '版本比较'
+        actionsBar.versionsButton.innerHTML = '版本'
         actionsBar.appendChild(actionsBar.versionsButton)
         
         if (path.match(/\.(x?html?|svg)$/)) {
             actionsBar.viewButton = document.createElement('button')
-            actionsBar.viewButton.innerHTML = 'WEB浏览'
+            actionsBar.viewButton.innerHTML = '浏览'
             actionsBar.appendChild(actionsBar.viewButton)
+        }else if (path.match(/\.js$/)) {
+            actionsBar.runButton = document.createElement('button')
+            actionsBar.runButton.innerHTML = '运行'
+            actionsBar.appendChild(actionsBar.runButton)
         }
-        
+
         return actionsBar;
     }
 
@@ -112,7 +116,25 @@
                 window.open(url, 'view-window');
             })
         }
-        
+        //运行JS
+        if (actionsBar.runButton) {
+            $(actionsBar.runButton).click(function(e) {
+                connection.runjs(entry.path, function(err, url) {
+                    if (err) {
+                        var errorBar = document.createElement('div');
+                        errorBar.className = 'error'
+                        errorBar.innerHTML = '<b>Unable to open file:</b> ' + err;
+                        editor.appendChild(errorBar);
+                        $(errorBar).hide();
+                        $(errorBar).fadeIn(250);
+
+                    }
+                    window.open(url, 'run-window');
+
+                })
+            })
+        }
+
         var loadVersionNumbered = function(i) {
             if (!versions[i].content) {
                 connection.loadVersion(versions[i].uuid, function(err, contents) {

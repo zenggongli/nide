@@ -386,3 +386,28 @@ exports.uninstall = function(package, save) {
     })
     return ee;
 }
+
+//运行JS
+exports.runjs = function(path) {
+    var ee = new EventEmitter()
+    if (path.charAt(0) != '/' || path.indexOf('..') != -1) {
+        process.nextTick(function() {
+            ee.emit('error', 'Invalid Path')
+        })
+    } else {
+        fs.stat(process.cwd() + path, function(err, result) {
+            if (err) {
+                ee.emit('error', '文件不存在,无法运行!');
+            } else {
+                process.run(process.cwd() + path, '', 'utf8', function(err) {
+                    if (err) ee.emit('error', err);
+                    else {
+                        addToListCache(process.cwd() + path)
+                        ee.emit('success');
+                    }
+                })
+            }
+        })
+    }
+    return ee;
+}
